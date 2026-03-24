@@ -1,0 +1,42 @@
+(deflisten workspaces_data :initial "[]" "scripts/workspaces.sh")
+(deflisten window_title :initial "..." "sh -c 'socat -u UNIX-CONNECT:$XDG_RUNTIME_DIR/hypr/$HYPRLAND_INSTANCE_SIGNATURE/.socket2.sock - | stdbuf -o0 sed -n \"s/^activewindow>>//p\" | stdbuf -o0 cut -d, -f2'")
+(deflisten volume :initial "0" "scripts/volume.sh")
+(deflisten layout :initial "en" "scripts/layout.sh")
+(deflisten is_fullscreen :initial "false" "scripts/fullscreen.sh")
+
+(defpoll time :interval "10s" "date '+%H:%M'")
+
+(defwidget workspaces []
+  (box :class "module-ws" :spacing 5 :space-evenly false
+    (for ws in workspaces_data
+      (button :onclick "hyprctl dispatch workspace ${ws.id}"
+        (label :text "" :class {ws.active ? "active" : "inactive"})))))
+
+(defwidget window_w []
+  (box :class "module-win" :visible {window_title != ""}
+    (label :text "${window_title}" :limit-width 50)))
+
+(defwidget sidestuff []
+  (box :class "module-stats" :spacing 5 :space-evenly false
+    (label :text "󰍛 ${round(EWW_CPU.avg, 0)}%" :class "cpu")
+    (label :text " ${round(EWW_RAM.used_mem_perc, 0)}%" :class "ram")
+    (label :text {volume == "mute" ? "󰝟" : "󰕾 ${volume}%"} :class "vol")
+    (label :text "󰌌 ${layout}" :class "layout")
+    (label :text "󱑒 ${time}" :class "time")))
+
+(defwidget bar_content []
+  (centerbox :class "bar-container"
+    (box :halign "start" (workspaces))
+    (box :halign "center" (window_w))
+    (box :halign "end" (sidestuff))))
+
+(defwindow bar
+  :monitor 0
+  :namespace "eww-bar"
+  :geometry (geometry :x "0%" :y "0px" :width "100%" :height "46px" :anchor "top center")
+  :stacking "fg"
+  :exclusive true
+  (revealer :transition "slideup" 
+            :reveal {!is_fullscreen} 
+            :duration "350ms"
+    (bar_content)))

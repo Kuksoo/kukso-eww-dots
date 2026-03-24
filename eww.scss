@@ -1,0 +1,61 @@
+$bg: #272e33;
+$bg-alt: #3c4831;
+$fg: #ebdbb2;
+$accent: #a7c080;
+$red: #fb4934;
+$yellow: #dbbc7f;
+$blue: #83a598;
+$magenta: #d3869b;
+
+* {
+  all: unset;
+  font-family: "JetBrainsMono Nerd Font", sans-serif;
+  font-size: 14px;
+}
+
+.bar-container {
+  background-color: rgba(40, 40, 40, 0.9);
+  border-radius: 15px;
+  border: 2px solid $bg-alt;
+}
+
+.module-ws, .module-win, .module-stats {
+  background-color: $bg-alt;
+  border-radius: 10px;
+  margin: 5px;
+  padding: 2px 12px;
+  box-shadow: 0 4px 5px rgba(0, 0, 0, 0.3);
+}
+
+/* Workspaces */
+.active { 
+  color: $accent; 
+  text-shadow: 0 0 5px $accent;
+  margin: 0 6px; 
+}
+.inactive { 
+  color: #665c54; 
+  margin: 0 6px; 
+}
+
+/* Window title */
+.module-win {
+  color: $fg;
+  font-weight: bold;
+}
+
+/* Stats */
+.module-stats {
+  label { margin: 0 6px; }
+  .gpu { color: $yellow; }
+  .cpu { color: $red; }
+  .ram { color: $magenta; }
+  .vol { color: $blue; }
+  .layout { color: $accent; font-weight: 900; }
+  .time { color: $fg; margin-left: 8px; font-weight: bold; }
+}
+
+button:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+}
